@@ -1,11 +1,11 @@
-// APB Master
+// *************APB Master**************
 module apb_master (
   input       wire        clk,
   input       wire        reset,
 
   output      wire        psel_o,
   output      wire        penable_o,
-  output      wire[9:0]   paddr_o,
+  output      wire[31:0]  paddr_o,
   output      wire        pwrite_o,
   output      wire[31:0]  pwdata_o,
   input       wire        pready_i,
@@ -34,13 +34,13 @@ module apb_master (
     else
       count_ff <= nxt_count;
 
-  assign nxt_count = penable_o & pready_i ? lfsr_val:
-                                            count_ff - 4'h1;
+  assign nxt_count = pready_i ? lfsr_val:
+                                count_ff - 4'h1;
 
   assign count = count_ff;
 
   // Generate a random load value
-  day7 DAY7 (
+  lfsr_des b1 (
     .clk            (clk),
     .reset          (reset),
     .lfsr_o         (lfsr_val)
@@ -68,13 +68,13 @@ module apb_master (
   always_ff @(posedge clk or posedge reset)
     if (reset)
       ping_pong <= 1'b1;
-    else if (state_q == ST_SETUP)
+    else if (state_q == ST_IDLE)
       ping_pong <= ~ping_pong;
 
   assign psel_o     = (state_q == ST_SETUP) | (state_q == ST_ACCESS);
   assign penable_o  = (state_q == ST_ACCESS);
   assign pwrite_o   = ping_pong;
-  assign paddr_o    = 10'h3FE;
+  assign paddr_o    = 32'hDEAD_CAFE;
   assign pwdata_o   = rdata_q + 32'h1;
 
   // Capture the read data to store it for the next write
@@ -86,8 +86,8 @@ module apb_master (
 
 endmodule
 
-// LFSR
-module day7 (
+// ***********LFSR***********
+module lfsr_des(
   input     wire      clk,
   input     wire      reset,
 

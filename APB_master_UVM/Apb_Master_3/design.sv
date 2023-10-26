@@ -1,6 +1,6 @@
-// APB Slave
+//********** APB Slave***************
 
-module day18 (
+module APB_slave (
   input         wire        clk,
   input         wire        reset,
 
@@ -19,7 +19,7 @@ module day18 (
   assign apb_req = psel_i & penable_i;
 
   // Instantiate the memory interface
-  day17 DAY17 (
+  Mem_Interface M1 (
     .clk            (clk),
     .reset          (reset),
     .req_i          (apb_req),
@@ -32,9 +32,9 @@ module day18 (
 
 endmodule
 
-// A memory interface
+//************ A memory interface***********
 
-module day17 (
+module Mem_Interface (
   input       wire        clk,
   input       wire        reset,
 
@@ -61,7 +61,7 @@ module day17 (
   assign mem_wr = req_i & ~req_rnw_i;
 
   // Detect a rising edge on the req_i
-  day3 DAY3 (
+  edge_det D1 (
     .clk            (clk),
     .reset          (reset),
     .a_i            (req_i),
@@ -85,7 +85,7 @@ module day17 (
   assign count = count_ff;
 
   // Generate a random load value
-  day7 DAY7 (
+  lfsr_des M2 (
     .clk            (clk),
     .reset          (reset),
     .lfsr_o         (lfsr_val)
@@ -105,10 +105,10 @@ module day17 (
 
 endmodule
 
-// An edge detector
+// **********An edge detector************************
 
 
-module day3 (
+module edge_det (
   input     wire    clk,
   input     wire    reset,
 
@@ -134,8 +134,8 @@ module day3 (
 
 endmodule
 
-// LFSR
-module day7 (
+//************ LFSR****************************************
+module lfsr_des (
   input     wire      clk,
   input     wire      reset,
 

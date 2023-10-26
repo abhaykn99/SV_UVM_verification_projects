@@ -25,7 +25,7 @@ module top ();
   logic		reset;
   
   // Instantiate RTL
-  day18 APB_SLAVE (
+  Apb_slave g1 (
     .clk					(clk),
     .reset					(reset),
     .psel_i					(apb_master_intf.psel),

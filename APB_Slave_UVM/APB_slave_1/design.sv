@@ -1,4 +1,4 @@
-// APB Master
+// *************APB Master**************
 module apb_master (
   input       wire        clk,
   input       wire        reset,
@@ -40,7 +40,7 @@ module apb_master (
   assign count = count_ff;
 
   // Generate a random load value
-  day7 DAY7 (
+  lfsr_des b1 (
     .clk            (clk),
     .reset          (reset),
     .lfsr_o         (lfsr_val)
@@ -86,8 +86,8 @@ module apb_master (
 
 endmodule
 
-// LFSR
-module day7 (
+// ***********LFSR***********
+module lfsr_des(
   input     wire      clk,
   input     wire      reset,
 
